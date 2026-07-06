@@ -1167,9 +1167,13 @@ function saveDB() {
   if (saveTimeout) clearTimeout(saveTimeout);
   saveTimeout = setTimeout(async () => {
     try {
+      const token = localStorage.getItem('token');
       await fetch('/api/data', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
         body: JSON.stringify(db)
       });
     } catch(e) { console.error('Save failed', e); }
@@ -1177,7 +1181,7 @@ function saveDB() {
 }
 
 async function logout() {
-  await fetch('/api/auth/logout', { method: 'POST' });
+  localStorage.removeItem('token');
   window.location.href = '/login.html';
 }
 
@@ -1896,13 +1900,22 @@ window.addEventListener('resize', () => { clearTimeout(window._resizeTimer); win
 ============================================================ */
 async function startApp() {
   try {
-    const meRes = await fetch('/api/auth/me');
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/login.html';
+      return;
+    }
+    const meRes = await fetch('/api/auth/me', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
     if (!meRes.ok) {
       window.location.href = '/login.html';
       return;
     }
     
-    const dataRes = await fetch('/api/data');
+    const dataRes = await fetch('/api/data', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
     if (dataRes.ok) {
       const dataJson = await dataRes.json();
       if (dataJson.data) {
@@ -1991,9 +2004,13 @@ async function logNutrition() {
   btn.disabled = true;
   
   try {
+    const token = localStorage.getItem('token');
     const res = await fetch('/api/nutrition/parse', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
       body: JSON.stringify({ text })
     });
     

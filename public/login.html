@@ -262,7 +262,8 @@
           throw new Error(data.error || 'Authentication failed');
         }
 
-        // Success - redirect
+        // Success - store token and redirect
+        if (data.token) localStorage.setItem('token', data.token);
         window.location.href = '/';
 
       } catch (err) {
