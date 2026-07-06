@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - My Bullet Journal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:          #FAFAF5;
+      --bg2:         #F3F3EA;
+      --card:        #FFFFFF;
+      --border:      #D8DCCA;
+      --olive:       #8BC34A;
+      --olive-dark:  #6B9A2A;
+      --text:        #2D2D2D;
+      --text-muted:  #7A8065;
+      --red:         #E57373;
+      --shadow:      0 2px 12px rgba(0,0,0,0.06);
+      --radius:      12px;
+      --dot:         #C8D8A2;
+    }
+    [data-theme="dark"] {
+      --bg:          #1A1D12;
+      --bg2:         #22271A;
+      --card:        #2A2F1E;
+      --border:      #3A4028;
+      --text:        #E8EDD8;
+      --text-muted:  #8A9A6A;
+      --dot:         #3A4028;
+      --shadow:      0 2px 12px rgba(0,0,0,0.3);
+    }
+    
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: radial-gradient(circle, var(--dot) 1px, transparent 1px);
+      background-size: 20px 20px;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .auth-container {
+      position: relative;
+      z-index: 1;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .auth-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      color: var(--olive);
+      margin-bottom: 8px;
+    }
+
+    .auth-sub {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg2);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .input-group input:focus {
+      border-color: var(--olive);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1.5px solid var(--olive-dark);
+      background: var(--olive);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background: var(--olive-dark);
+      transform: translateY(-1px);
+    }
+
+    .auth-toggle {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .auth-toggle a {
+      color: var(--olive);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .auth-toggle a:hover {
+      text-decoration: underline;
+    }
+
+    .error-msg {
+      color: var(--red);
+      font-size: 13px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .theme-toggle:hover { opacity: 1; }
+
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    
+    <h1 class="auth-title" id="formTitle">Welcome Back</h1>
+    <p class="auth-sub" id="formSub">Log in to your Bullet Journal</p>
+    
+    <div class="error-msg" id="errorMsg"></div>
+
+    <form id="authForm">
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" required autocomplete="username">
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn" id="submitBtn">Log In</button>
+    </form>
+
+    <div class="auth-toggle">
+      <span id="toggleText">Don't have an account?</span> 
+      <a id="toggleLink" onclick="toggleMode()">Sign Up</a>
+    </div>
+  </div>
+
+  <script>
+    let isLoginMode = true;
+
+    // Theme logic
+    const themeBtn = document.getElementById('themeBtn');
+    let currentTheme = localStorage.getItem('bj_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    themeBtn.textContent = currentTheme === 'light' ? '🌙' : '☀️';
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      localStorage.setItem('bj_theme', currentTheme);
+      themeBtn.textContent = currentTheme === 'light' ? '🌙' : '☀️';
+    }
+
+    // Auth logic
+    const formTitle = document.getElementById('formTitle');
+    const formSub = document.getElementById('formSub');
+    const submitBtn = document.getElementById('submitBtn');
+    const toggleText = document.getElementById('toggleText');
+    const toggleLink = document.getElementById('toggleLink');
+    const authForm = document.getElementById('authForm');
+    const errorMsg = document.getElementById('errorMsg');
+
+    function toggleMode() {
+      isLoginMode = !isLoginMode;
+      errorMsg.style.display = 'none';
+      if (isLoginMode) {
+        formTitle.textContent = 'Welcome Back';
+        formSub.textContent = 'Log in to your Bullet Journal';
+        submitBtn.textContent = 'Log In';
+        toggleText.textContent = "Don't have an account?";
+        toggleLink.textContent = 'Sign Up';
+      } else {
+        formTitle.textContent = 'Create Account';
+        formSub.textContent = 'Start your Bullet Journal journey';
+        submitBtn.textContent = 'Sign Up';
+        toggleText.textContent = 'Already have an account?';
+        toggleLink.textContent = 'Log In';
+      }
+    }
+
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      errorMsg.style.display = 'none';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Please wait...';
+
+      const endpoint = isLoginMode ? '/api/auth/login' : '/api/auth/register';
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Authentication failed');
+        }
+
+        // Success - redirect
+        window.location.href = '/';
+
+      } catch (err) {
+        errorMsg.textContent = err.message;
+        errorMsg.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = isLoginMode ? 'Log In' : 'Sign Up';
+      }
+    });
+  </script>
+</body>
+</html>
