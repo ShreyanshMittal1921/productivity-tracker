@@ -62,3 +62,4 @@ The application will be accessible in your web browser at:
 1. Open the app in your browser and register an account.
 2. Once logged in, use the toggle in the top right corner to switch between **Productivity Mode** and **Nutrition Mode**.
 3. Your data is securely saved in a local `database.sqlite` file. You can also manually Export/Import your data using the buttons in the header!
+# productivity-tracker
